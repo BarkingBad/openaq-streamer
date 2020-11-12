@@ -24,8 +24,13 @@ import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
 import pl.edu.agh.model.Parser
 
-case class SQSMicroBatchStreamer(numPartitions: Int)
-    extends MicroBatchStream
+case class SQSMicroBatchStreamer(
+    numPartitions: Int,
+    accessKey: String,
+    secretKey: String,
+    region: String,
+    queueUrl: String
+) extends MicroBatchStream
     with Logging {
 
   private var currentOffset = LongOffset(-1)
@@ -45,22 +50,18 @@ case class SQSMicroBatchStreamer(numPartitions: Int)
       AmazonSQSClientBuilder
         .standard()
     sqsBuilder
-      .setRegion(Region.getRegion(Regions.US_EAST_1).getName)
+      .setRegion(region)
     sqsBuilder
       .setCredentials(
         new AWSStaticCredentialsProvider(
           new AWSCredentials() {
-            override def getAWSAccessKeyId: String = ""
-            override def getAWSSecretKey: String =
-              ""
+            override def getAWSAccessKeyId: String = accessKey
+            override def getAWSSecretKey: String = secretKey
           }
         )
       )
 
     val sqs = sqsBuilder.build()
-
-    val queueUrl: String =
-      ""
 
     val messageReader = new Thread(() => {
       while (active) {

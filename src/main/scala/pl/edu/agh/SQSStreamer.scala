@@ -34,7 +34,13 @@ class SQSStreamer(val schema: StructType, numPartitions: Int)
         override def toMicroBatchStream(
             checkpointLocation: String
         ): MicroBatchStream = {
-          SQSMicroBatchStreamer(numPartitions)
+          SQSMicroBatchStreamer(
+            numPartitions,
+            options.get("accessKey"),
+            options.get("secretKey"),
+            options.get("region"),
+            options.get("queueUrl")
+          )
         }
       }
 }
