@@ -6,7 +6,7 @@ val circeVersion = "0.12.3"
 
 lazy val root = (project in file("."))
   .settings(
-    name := "openaq-streammer",
+    name := "openaq-streamer",
     libraryDependencies ++= Seq(
       "com.amazonaws" % "aws-java-sdk-sqs" % "1.11.897",
       "io.circe" %% "circe-core" % circeVersion,
