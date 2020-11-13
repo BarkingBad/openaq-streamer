@@ -3,7 +3,6 @@ package pl.edu.agh
 import java.util.concurrent.atomic.AtomicBoolean
 
 import com.amazonaws.auth.{AWSCredentials, AWSStaticCredentialsProvider}
-import com.amazonaws.regions.{Region, Regions}
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder
 import com.amazonaws.services.sqs.model.Message
 import javax.annotation.concurrent.GuardedBy
