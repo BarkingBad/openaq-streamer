@@ -78,6 +78,7 @@ case class SQSMicroBatchStreamer(
           orderedMessages.map(x => (Parser(x._1).toOption.get, x._2))
         )
         messages.foreach(m => sqs.deleteMessage(queueUrl, m.getReceiptHandle))
+        Thread.sleep(100)
       }
     })
     messageReader.start()
