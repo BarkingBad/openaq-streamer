@@ -9,7 +9,7 @@ make image
 
 - Run docker
 ```bash
-docker run --rm -p 8888:8888 -p 4040:4040 -v mountPoint:/home/jovyan/work balis/spark-sqs-streamer
+docker run --rm -p 8888:8888 -p 4040:4040 -v mountPoint:/home/jovyan/work balis/spark-openaq-streamer
 ```
 ## Usage
 1. Create an AWS SQS queue and subscribe to SNS topic `arn:aws:sns:us-east-1:470049585876:OPENAQ_NEW_MEASUREMENT`. 
