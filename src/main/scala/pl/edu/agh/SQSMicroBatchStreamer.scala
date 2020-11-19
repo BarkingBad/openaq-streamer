@@ -2,7 +2,12 @@ package pl.edu.agh
 
 import java.util.concurrent.atomic.AtomicBoolean
 
-import com.amazonaws.auth.{AWSCredentials, AWSStaticCredentialsProvider}
+import com.amazonaws.auth.{
+  AWSCredentials,
+  AWSStaticCredentialsProvider,
+  BasicAWSCredentials,
+  BasicSessionCredentials
+}
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder
 import com.amazonaws.services.sqs.model.Message
 import javax.annotation.concurrent.GuardedBy
@@ -27,6 +32,7 @@ case class SQSMicroBatchStreamer(
     numPartitions: Int,
     accessKey: String,
     secretKey: String,
+    maybeToken: Option[String],
     region: String,
     queueUrl: String
 ) extends MicroBatchStream
@@ -53,9 +59,10 @@ case class SQSMicroBatchStreamer(
     sqsBuilder
       .setCredentials(
         new AWSStaticCredentialsProvider(
-          new AWSCredentials() {
-            override def getAWSAccessKeyId: String = accessKey
-            override def getAWSSecretKey: String = secretKey
+          maybeToken match {
+            case Some(token) =>
+              new BasicSessionCredentials(accessKey, secretKey, token)
+            case None => new BasicAWSCredentials(accessKey, secretKey)
           }
         )
       )
