@@ -38,6 +38,9 @@ class SQSStreamer(val schema: StructType, numPartitions: Int)
             numPartitions,
             options.get("accessKey"),
             options.get("secretKey"),
+            if (options.containsKey("sessionToken")) {
+              Some(options.get("sessionToken"))
+            } else { None },
             options.get("region"),
             options.get("queueUrl")
           )
