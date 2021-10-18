@@ -58,16 +58,14 @@ case class WSMicroBatchStreamer(
       .readTimeout(0, TimeUnit.MILLISECONDS)
       .build()
 
-    val request = new Request.Builder()
+    val ws = client.newWebSocket(new Request.Builder()
       .url("wss://ws-feed.exchange.coinbase.com")
-      .build()
-
-    val ws = client.newWebSocket(request, new WebSocketListener {
+      .build(), new WebSocketListener {
 
       override def onOpen(webSocket: WebSocket, response: Response): Unit = {
         log.debug("Opened websocket connection...")
         // Send out initial messages which we will get echoed back
-        webSocket.send("""{"type":"subscribe","product_ids":["ETH-USD","ETH-EUR"],"channels":["level2","heartbeat",{"name":"ticker","product_ids":["ETH-BTC","ETH-USD"]}]}""")
+        webSocket.send("""{"type":"subscribe","channels":[{"name":"ticker","product_ids":["ETH-BTC","ETH-USD"]}]}""")
       }
 
       override def onClosed(webSocket: WebSocket, code: Int, reason: String): Unit = {
@@ -88,12 +86,13 @@ case class WSMicroBatchStreamer(
         }
       }
 
-      override def onMessage(webSocket: WebSocket, bytes: ByteString): Unit = {
-        Parser(new String(bytes.toByteArray)) match {
+      override def onMessage(webSocket: WebSocket, str: String): Unit = {
+        Parser(str) match {
           case Right(message) => 
             currentOffset = currentOffset.+(1)
             messageQueue.put((message, currentOffset.offset))
-          case Left(exception) => log.warn("Expected WsMessage bug got " + exception)
+          case Left(exception) => 
+            log.warn("Expected WsMessage bug got " + exception)
         }
       }
     })

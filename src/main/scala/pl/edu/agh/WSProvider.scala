@@ -15,42 +15,16 @@ class WSProvider extends DataSourceRegister with TableProvider with Logging {
   override def shortName(): String = "ws"
 
   private val schema = StructType(
-    StructField(
-      "date",
-      StructType(
-        List(
-          StructField("local", StringType, true),
-          StructField("utc", StringType, true)
-        )
-      ),
-      true
-    ) ::
-      StructField("parameter", StringType, true) ::
-      StructField("value", DoubleType, true) ::
-      StructField("unit", StringType, true) ::
-      StructField(
-        "averagingPeriod",
-        StructType(
-          List(
-            StructField("unit", StringType, nullable = true),
-            StructField("value", DoubleType, true)
-          )
-        ),
-        true
-      ) ::
-      StructField("location", StringType, true) ::
-      StructField("city", StringType, true) ::
-      StructField("country", StringType, true) ::
-      StructField(
-        "coordinates",
-        StructType(
-          List(
-            StructField("latitude", DoubleType, true),
-            StructField("longitude", DoubleType, true)
-          )
-        ),
-        true
-      ) :: Nil
+    StructField("type", StringType, true) ::
+    StructField("trade_id", LongType, true) ::
+    StructField("sequence", LongType, true) ::
+    StructField("time", StringType, true) ::
+    StructField("product_id", StringType, true) ::
+    StructField("price", DoubleType, true) ::
+    StructField("side", StringType, true) ::
+    StructField("last_size", DoubleType, true) ::
+    StructField("best_bid", DoubleType, true) ::
+    StructField("best_ask", DoubleType, true) :: Nil
   )
 
   override def getTable(
