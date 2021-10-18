@@ -10,9 +10,9 @@ import org.apache.spark.sql.sources.DataSourceRegister
 import org.apache.spark.sql.types._
 import org.apache.spark.sql.util.CaseInsensitiveStringMap
 
-class SQSProvider extends DataSourceRegister with TableProvider with Logging {
+class WSProvider extends DataSourceRegister with TableProvider with Logging {
 
-  override def shortName(): String = "sqs"
+  override def shortName(): String = "ws"
 
   private val schema = StructType(
     StructField(
@@ -59,7 +59,7 @@ class SQSProvider extends DataSourceRegister with TableProvider with Logging {
       properties: util.Map[String, String]
   ): Table = {
     assert(partitioning.isEmpty)
-    new SQSStreamer(schema, SparkSession.active.sparkContext.defaultParallelism)
+    new WSStreamer(schema, SparkSession.active.sparkContext.defaultParallelism)
   }
 
   override def inferSchema(options: CaseInsensitiveStringMap): StructType = {
